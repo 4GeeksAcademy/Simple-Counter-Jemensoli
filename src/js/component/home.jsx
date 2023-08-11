@@ -1,25 +1,43 @@
-import React from "react";
-
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState, useEffect } from 'react';
+import SecondsCounter from "./SecondsCounter";
 
 //create your first component
 const Home = () => {
+	
+	const [actualSeconds, setSeconds] = useState(0);
+	const [stopCounter, setStop] = useState(false)
+
+	useEffect(() => {
+	  const interval = setInterval(() => {
+		if (!stopCounter) {
+			setSeconds(actualSeconds => actualSeconds + 1);
+		}
+	  }, 1000);
+	  return () => clearInterval(interval);
+	}, [stopCounter]);
+  
+
+	function stopTimer() {
+		setStop(true)
+	}
+
+	function continueTimer() {
+		setStop(false)
+	}
+
+	function restartTimer() {
+		setStop(true)
+		setSeconds(0)
+		setStop(false)
+	}
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
+		<>
+			<SecondsCounter seconds={actualSeconds}/>
+			<button type="button" onClick={stopTimer}>Parar contador</button>
+			<button type="button" onClick={continueTimer}>Reanudar contador</button>
+			<button type="button" onClick={restartTimer}>Reiniciar contador</button>
+		</>
 	);
 };
 
